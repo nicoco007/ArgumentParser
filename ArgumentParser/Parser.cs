@@ -41,20 +41,13 @@ namespace ArgumentParser
             {
                 var parameter = parameters.FirstOrDefault(param => "--" + param.LongName == args[i] || "-" + param.ShortName == args[i]);
 
-                if (parameter == null)
+                if (parameter == null && !args[i].StartsWith("-") && currentOrderedValue < orderedValues.Count)
                 {
-                    if (currentOrderedValue < orderedValues.Count)
-                    {
-                        var value = orderedValues[currentOrderedValue];
-                        value.Value = args[i];
-                        currentOrderedValue++;
-                    }
-                    else
-                    {
-                        throw new ArgumentException("Unknown argument: " + args[i]);
-                    }
+                    var value = orderedValues[currentOrderedValue];
+                    value.Value = args[i];
+                    currentOrderedValue++;
                 }
-                else
+                else if (parameter != null)
                 {
                     if (parameter.HasValue)
                     {
@@ -69,6 +62,10 @@ namespace ArgumentParser
                     {
                         parameter.Value = true;
                     }
+                }
+                else
+                {
+                    throw new ArgumentException("Unknown argument: " + args[i]);
                 }
             }
 

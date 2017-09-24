@@ -37,8 +37,20 @@ namespace ArgumentParserUnitTests
             parser.AddParameter("this-should-be-false");
 
             var dict = parser.Parse(args);
-            
-            Assert.IsFalse((bool) dict["this-should-be-false"]);
+
+            Assert.IsFalse((bool)dict["this-should-be-false"]);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void ShouldNotDetectOrderedValueAsParameter()
+        {
+            var args = new string[] { "--this-is-an-argument" };
+            var parser = new Parser();
+
+            parser.AddOrderedValue("blah");
+
+            var dict = parser.Parse(args);
         }
 
         [TestMethod]
